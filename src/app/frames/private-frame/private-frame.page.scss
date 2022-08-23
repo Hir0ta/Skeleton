@@ -1,0 +1,9 @@
+ion-app {
+
+	ion-split-pane {
+		ion-router-outlet {
+			width: 100%;
+			max-width: 100%;
+		}
+	}
+}
