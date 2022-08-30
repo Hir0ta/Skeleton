@@ -4,17 +4,6 @@
 
 export const environment = {
   production: false,
-  firebase:
-  {
-    apiKey: 'AIzaSyCLO88Z4qwuEcQsq2IkqyPPYSea3ZFUZIY',
-    authDomain: 'skeleton-c1bad.firebaseapp.com',
-    databaseURL: 'https://skeleton-c1bad-default-rtdb.europe-west1.firebasedatabase.app',
-    projectId: 'skeleton-c1bad',
-    storageBucket: 'skeleton-c1bad.appspot.com',
-    messagingSenderId: '358986606053',
-    appId: '1:358986606053:web:cc7795cd66427acd2bfb0c'
-  }
-
 };
 
 /*
