@@ -1,6 +1,18 @@
 ion-app {
 
 	ion-split-pane {
+		ion-list-header {
+			.space-between {
+				width: 100%;
+
+				ion-icon {
+					width: 45px;
+					height: 30px;
+					pointer-events: none;
+				}
+			}
+		}
+
 		ion-router-outlet {
 			width: 100%;
 			max-width: 100%;

@@ -1,9 +1,22 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>LoginPage</ion-title>
+    <ion-title>Belépés</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <form [formGroup]="userData">
+    <ion-item>
+      <ion-label for="email">E-mail:</ion-label>
+      <ion-input type="email" email="true" formControlName="email"></ion-input>
+      <ion-label color="danger" *ngIf="invalidEmail">E-mail cím nem megfelelő</ion-label>
+    </ion-item>
 
+    <ion-item>
+      <ion-label for="password">Jelszó</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+  </form>
+  <ion-button (click)="login()">Belépés</ion-button>
+  <ion-button routerLink="/public/signup">{{language.actions.registration}}</ion-button>
 </ion-content>

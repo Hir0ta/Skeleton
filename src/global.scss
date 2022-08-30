@@ -24,3 +24,22 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.flex {
+	display: flex;
+}
+
+.space-between {
+	@extend .flex;
+	justify-content: space-between;
+}
+
+.space-even {
+	@extend .flex;
+	justify-content: space-evenly;
+}
+
+.space-center {
+	@extend .flex;
+	justify-content: center;
+}

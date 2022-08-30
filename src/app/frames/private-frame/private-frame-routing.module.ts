@@ -4,21 +4,25 @@ import { Routes, RouterModule } from '@angular/router';
 import { PrivateFrame } from './private-frame.page';
 
 const routes: Routes = [
-	{
-		path: '',
-		component: PrivateFrame,
-		children:
-			[
-				{
-					path: 'welcome',
-					loadChildren: () => import('../../pages/welcome-page/welcome-page.module').then(m => m.WelcomePageModule)
-				}
-			]
-	},
+  {
+    path: '',
+    component: PrivateFrame,
+    children:
+      [
+        {
+          path: 'welcome',
+          loadChildren: () => import('../../pages/welcome-page/welcome-page.module').then(m => m.WelcomePageModule)
+        },
+        {
+          path: '**',
+          redirectTo: 'welcome'
+        }
+      ]
+  },
 ];
 
 @NgModule({
-	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class PrivateFramePageRoutingModule { }

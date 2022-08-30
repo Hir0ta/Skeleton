@@ -1,9 +1,22 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>SignUpPage</ion-title>
+    <ion-title>{{language.pageTitles.registration}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <form [formGroup]="userData">
+    <ion-item>
+      <ion-label for="email">{{language.labels.email}}</ion-label>
+      <ion-input type="email" email="true" formControlName="email"></ion-input>
+      <ion-label color="danger" *ngIf="invalidEmail">{{language.errorCodes.EMAIL_FORMAT}}</ion-label>
+    </ion-item>
 
+    <ion-item>
+      <ion-label for="password">{{language.labels.password}}</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+      <ion-label color="danger" *ngIf="invalidPwd">{{language.errorCodes.PASSWORD_LENGTH}}</ion-label>
+    </ion-item>
+  </form>
+  <ion-button (click)="signup()">{{language.actions.registration}}</ion-button>
 </ion-content>
