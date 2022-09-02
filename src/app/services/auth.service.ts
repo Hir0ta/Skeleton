@@ -1,10 +1,12 @@
+/* eslint-disable curly */
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
 
-import { AuthResponseData } from '../models/Auth.model';
+import { AuthData, AuthResponseData } from '../models/Auth.model';
 import { User, UserData, UserLoginData } from '../models/User.model';
 import { HTTPService } from './http.service';
 import { consts } from '../utils/consts';
@@ -16,7 +18,7 @@ import { consts } from '../utils/consts';
 export class AuthService
 {
 
-  user: User;
+  public user: User;
 
   private tokenExpirationTimer: any;
 
@@ -33,7 +35,11 @@ export class AuthService
 
     const result = await this.http.post<AuthResponseData>(url, params);
 
-    this.handleAuthentication(result);
+    if (result.status)
+    {
+      await this.refreshTokens(result.data);
+    }
+
 
     return result.status;
   }
@@ -51,11 +57,13 @@ export class AuthService
     this.user = new User(
       userData.email,
       userData.id,
-      userData.token,
-      new Date(userData.tokenExpirationDate)
+      userData.idToken,
+      new Date(userData.tokenExpirationDate),
+      userData.refreshToken,
+      userData.accessToken
     );
 
-    if (this.user.token)
+    if (this.user.idToken)
     {
       const expirationDuration =
         new Date(userData.tokenExpirationDate).getTime() -
@@ -63,7 +71,7 @@ export class AuthService
       this.autoLogout(expirationDuration);
     }
 
-    return true;
+    return this.user;
   }
 
   public async signup(user: UserLoginData)
@@ -75,40 +83,20 @@ export class AuthService
       returnSecureToken: true
     };
 
-    const result = await this.http.post<AuthResponseData>(url, params);
+    const result = (await this.http.post<AuthResponseData>(url, params)).data;
 
     this.handleAuthentication(result);
 
     return result.status;
-
-    // return this.http
-    //   .post<AuthResponseData>(
-    //     'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=' + environment.firebase.apiKey,
-    //     {
-    //       email: user.email,
-    //       password: user.password,
-    //       returnSecureToken: true
-    //     }
-    //   )
-    //   .pipe(
-    //     catchError(this.handleError),
-    //     tap(resData =>
-    //     {
-    //       this.handleAuthentication(
-    //         resData.email,
-    //         resData.localId,
-    //         resData.idToken,
-    //         +resData.expiresIn
-    //       );
-    //     })
-    //   ).subscribe();
   }
 
-  autoLogout(expirationDuration: number)
+  async autoLogout(expirationDuration: number)
   {
-    this.tokenExpirationTimer = setTimeout(() =>
+
+    this.tokenExpirationTimer = setTimeout(async () =>
     {
-      this.logout();
+      //if can't get access token, logout
+      if (!this.refreshTokens({})) this.logout();
     }, expirationDuration);
   }
 
@@ -123,36 +111,39 @@ export class AuthService
     this.tokenExpirationTimer = null;
   }
 
-  private handleError(errorRes: HttpErrorResponse)
-  {
-    console.log(errorRes);
-    let errorMessage = 'An unknown error occurred!';
-    if (!errorRes.error || !errorRes.error.error)
-    {
-      return throwError(errorMessage);
-    }
-    switch (errorRes.error.error.message)
-    {
-      case 'EMAIL_EXISTS':
-        errorMessage = 'E-mail cím már foglalt';
-        break;
-      case 'EMAIL_NOT_FOUND':
-        errorMessage = 'E-mail cím';
-        break;
-      case 'INVALID_PASSWORD':
-        errorMessage = 'Helytelen jelszó';
-        break;
-    }
-    return throwError(errorMessage);
-
-    //return this.handler.errorHandler(errorRes.error.error.message)
-  }
-
-  private handleAuthentication(authData: AuthResponseData)
+  private async handleAuthentication(authData: AuthData)
   {
     const expirationDate = new Date(new Date().getTime() + authData.expiresIn * 1000);
-    const user = new User(authData.email, authData.localId, authData.idToken, expirationDate);
+    this.user = new User(authData.email, authData.localId, authData.idToken, expirationDate, authData.refreshToken, authData.access_token);
     this.autoLogout(authData.expiresIn * 1000);
-    localStorage.setItem('userData', JSON.stringify(user));
+    localStorage.setItem('userData', JSON.stringify(this.user));
+
+  }
+
+  private async refreshTokens(result)
+  {
+    let url = consts.API.refreshTokensURL;
+
+    let params =
+    {
+      grant_type: 'refresh_token',
+      refresh_token: result.refreshToken
+    };
+
+    //call tokens with refresh token
+    let tokens = await this.http.post<AuthData>(url, params);
+
+    result = { ...result, ...tokens };
+
+    //if get tokens, store it and restart auto logout counter
+    if (result)
+    {
+      this.handleAuthentication(result);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 }

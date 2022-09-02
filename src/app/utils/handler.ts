@@ -1,8 +1,13 @@
 /* eslint-disable curly */
 import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { throwError } from 'rxjs';
 import { LanguageService } from '../services/language.service';
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class Handlers
 {
@@ -17,7 +22,6 @@ export class Handlers
     let errorMessage = language.errorCodes.UNKNOWN_ERROR;
 
     if (errorRes.error.error) errorMessage = language.errorCodes[errorRes.error.error.message];
-
 
     const alert = await alertCtrl.create({
       header: errorMessage,

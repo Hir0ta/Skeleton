@@ -1,6 +1,6 @@
-export interface AuthResponseData
+/* eslint-disable @typescript-eslint/naming-convention */
+export interface AuthData
 {
-  status: boolean;
   kind: string;
   idToken: string;
   email: string;
@@ -8,4 +8,11 @@ export interface AuthResponseData
   expiresIn: number;
   localId: string;
   registered?: boolean;
+  access_token?: string;
+};
+
+export interface AuthResponseData
+{
+  status: boolean;
+  data: AuthData;
 }

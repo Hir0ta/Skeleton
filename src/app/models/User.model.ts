@@ -2,8 +2,10 @@ export interface UserData
 {
   email: string;
   id: string;
-  token: string;
+  idToken: string;
   tokenExpirationDate: Date;
+  refreshToken: string;
+  accessToken?: string;
 }
 
 export interface UserLoginData
@@ -18,8 +20,10 @@ export class User implements UserData
   constructor(
     public email: string,
     public id: string,
-    public token: string,
-    public tokenExpirationDate: Date
+    public idToken: string,
+    public tokenExpirationDate: Date,
+    public refreshToken: string,
+    public accesToken?: string
   ) { }
 
   get _token()
@@ -28,6 +32,6 @@ export class User implements UserData
     {
       return null;
     }
-    return this.token;
+    return this.idToken;
   }
 }

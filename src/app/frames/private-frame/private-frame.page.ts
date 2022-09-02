@@ -1,5 +1,8 @@
+/* eslint-disable curly */
+/* eslint-disable prefer-const */
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
+import { appPages } from 'src/app/pages/page-list';
 import { CommonService } from 'src/app/services/common.service';
 
 @Component({
@@ -11,13 +14,11 @@ export class PrivateFrame implements OnInit
 {
   language = this.services.languageService.selectedLanguage;
 
-  public appPages = [
-    { title: 'Kezdőlap', url: 'welcome', icon: 'apps' },
-  ];
+  public pages = appPages;
 
   constructor(public services: CommonService) { }
 
-  ngOnInit()
+  async ngOnInit()
   {
     this.services.auth.checkLogin();
   }

@@ -8,7 +8,13 @@ export const languageEN =
     EMAIL_NOT_FOUND: 'Email not found',
     INVALID_PASSWORD: 'Invalid password',
     EMAIL_FORMAT: 'E-mail format not valid',
-    PASSWORD_LENGTH: 'Password too short (min 6 characters)'
+    PASSWORD_LENGTH: 'Password too short (min 6 characters)',
+    TOKEN_EXPIRED: 'Token expired',
+    USER_DISABLED: 'User disabled',
+    USER_NOT_FOUND: 'User not found',
+    INVALID_REFRESH_TOKEN: 'Invalid refresh token',
+    MISSING_REFRESH_TOKEN: 'Missing refresh token',
+    INVALID_GRANT_TYPE: 'Invalid grant type',
   },
   actions:
   {

@@ -8,11 +8,12 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { LanguageService } from './services/language.service';
+import { Handlers } from './utils/handler';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, LanguageService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, LanguageService, Handlers],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

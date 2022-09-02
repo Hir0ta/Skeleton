@@ -16,14 +16,12 @@ interface HTTPResponse
 })
 export class HTTPService
 {
-  constructor(private http: HttpClient)
+  constructor(private http: HttpClient, private handlers: Handlers)
   {
   }
 
-  async post<ResData>(url, params): Promise<HTTPResponse>
+  async post<ResData>(url: string, params: object): Promise<HTTPResponse>
   {
-    const handlers = new Handlers();
-
     let result: HTTPResponse = {
       status: false
     };
@@ -34,33 +32,31 @@ export class HTTPService
         params
       )
       .pipe(
-        tap((resData: ResData) =>
+        tap((resData) =>
         {
           result.status = true;
           result.data = resData;
         }),
-        catchError(handlers.errorHandler)
+        catchError(this.handlers.errorHandler)
       ).toPromise();
 
     return result;
   }
 
-  async get<ResData>(url): Promise<HTTPResponse>
+  async get<ResData>(url: string): Promise<HTTPResponse>
   {
-    const handlers = new Handlers();
-
     let result: HTTPResponse = {
       status: false
     };
 
     await this.http.get<ResData>(url).
       pipe(
-        tap((resData: ResData) =>
+        tap((resData) =>
         {
           result.status = true;
           result.data = resData;
         }),
-        catchError(handlers.errorHandler)
+        catchError(this.handlers.errorHandler)
       ).toPromise();
 
     return result;
